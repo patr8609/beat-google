@@ -8,7 +8,7 @@
 </head>
 <body bgColor="#FFFFFF">
 	<center>
-		<img src="https://upload.cc/i1/2019/01/16/sSnz5o.png" width="200" height="150">
+		<img src="https://upload.cc/i1/2019/01/16/NfSLhd.png" width="400" height="200">
 		</form>
 	
 <form action='${requestUri}' method='get'>

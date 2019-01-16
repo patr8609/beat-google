@@ -21,7 +21,6 @@ public class WebPage {
 		score = 0;
 		for(Keyword k : keywords) {
 			score += counter.countKeyword(k.name) * k.weight;
-			
 		}
 		
 	}

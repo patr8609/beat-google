@@ -21,6 +21,7 @@ public class GoogleQuery
 	public String content;
 	public GoogleQuery(String searchKeyword) throws UnsupportedEncodingException
 	{
+		
 		this.searchKeyword = searchKeyword;
 		
 		this.url = "http://www.google.com/search?q="+searchKeyword + "movie" + "&oe=utf8&num=20";
@@ -77,6 +78,5 @@ public class GoogleQuery
 		
 		return retVal;
 	}
-	
 	
 }
