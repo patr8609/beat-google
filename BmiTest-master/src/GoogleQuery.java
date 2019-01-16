@@ -24,7 +24,7 @@ public class GoogleQuery
 		
 		this.searchKeyword = searchKeyword;
 		
-		this.url = "http://www.google.com/search?q="+searchKeyword + "movie" + "&oe=utf8&num=20";
+		this.url = "http://www.google.com/search?q="+searchKeyword+ "review"  + "&oe=utf8&num=20";
 	}
 	
 	private String fetchContent() throws IOException
