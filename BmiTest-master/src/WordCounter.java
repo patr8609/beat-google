@@ -1,5 +1,4 @@
 
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -7,46 +6,56 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 
-public class WordCounter {
-	private String urlStr;
+public class WordCounter {    ///蝞活�
+	private String url;
 	private String content;
-	
-	public WordCounter(String urlStr) {
-		this.urlStr = urlStr;
+
+	public WordCounter(String url) {
+		this.url = url;
 	}
-	
-	private String fetchContent() throws IOException{
-		URL url = new URL(this.urlStr);
-		URLConnection con = url.openConnection();
-		
-		InputStream in = con.getInputStream();
-		BufferedReader br = new BufferedReader(new InputStreamReader(in));
-		
+
+	private String fetchContent() throws IOException {
 		String retVal = "";
-		String line = null;
-		
-		while((line = br.readLine()) != null) {
-			retVal = retVal + line + "\n";
+
+		try {
+			URL url = new URL(this.url);
+			URLConnection conn = url.openConnection();
+			conn.setRequestProperty("User-Agent",
+					"Mozilla/5.0(Macintosh;U;Intel Mac OS X 10.4; en-US;rv:1.9.2.2)Gecko/20100316 Firefox/3.6.2");
+			conn.connect();
+			InputStream in = conn.getInputStream();
+			BufferedReader br = new BufferedReader(new InputStreamReader(in));
+			String line = null;
+			while ((line = br.readLine()) != null) {
+				retVal += line;
+			}
+			return retVal;
+
+		} catch (IOException e) {
+			retVal = "  ";
+			return retVal;
+
+		} catch (IllegalArgumentException e) {
+			retVal = "  ";
+			return retVal;
 		}
-		
-		return retVal;
+
 	}
-	
-	
-	public int countKeyword(String keyword) throws IOException{
-		if(content == null) content = fetchContent();
-		
+
+	public int countKeyword(String keyword) throws IOException {
+		if (content == null) {
+			content = fetchContent();
+		}
+
 		content = content.toUpperCase();
 		keyword = keyword.toUpperCase();
-		
-		int retVal = 0;
-		int fromIdx = 0;
-		int found = -1;
-		while ((found = content.indexOf(keyword, fromIdx)) != -1) {
-			retVal++;
-			fromIdx = found + keyword.length();
+
+		int freq = 0;
+		int num = content.indexOf(keyword, 0);
+		while (num >= 0) {
+			num = content.indexOf(keyword, num + keyword.length());
+			freq++;
 		}
-		
-		return retVal;
+		return freq;
 	}
 }

@@ -2,6 +2,7 @@
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map.Entry;
@@ -19,6 +20,13 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/TestProject")
 public class TestProject extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	private String buttonString;
+	private static final double weight = 20;
+	private static final double weight2 = 10;
+	private static final double weight3 = 5;
+	public Keyword keyword;
+	public ArrayList<Keyword> keywords;
+	public WebTree news;
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -42,19 +50,64 @@ public class TestProject extends HttpServlet {
 			return;
 		}
 
-		GoogleQuery google = new GoogleQuery(request.getParameter("keyword"));
-		HashMap<String, String> query = google.query();
-		
-		String[][] s = new String[query.size()][2];
-		request.setAttribute("query", s);
-		int num = 0;
-		for(Entry<String, String> entry : query.entrySet()) {
-		    String key = entry.getKey();
-		    String value = entry.getValue();
-		    s[num][0] = key;
-		    s[num][1] = value;
-		    num++;
+
+		keyword = new Keyword();
+		keywords = new ArrayList<>();
+		String input = request.getParameter("keyword");
+		int m = input.indexOf(" ");
+		String input1 = input;
+		String input2 = "review";
+		String text = "movie";  
+		String text2 = "review";
+		String text3 = "popular";
+
+		if (!input.isEmpty()) {
+			System.out.print(text);
+			text= text2;
+			while (input1.contains(" ")) {
+				m = input1.indexOf(" ");
+				input2 = input1.substring(m + 1, input1.length());
+				input1 = input1.substring(0, m);
+
+				keyword.addKeyword(new Keyword(input1, weight, buttonString));
+				text = text + "+" + input1;
+				input1 = input2;
+			}
+			keyword.addKeyword(new Keyword(input1, weight, buttonString));
+			text = text + "+" + input1;
 		}
+
+		if (buttonString != "") {
+			keyword.addKeyword(new Keyword(text2, weight2, buttonString));
+			if (input.isEmpty()) {
+				text = text2;
+			
+			}
+		} else {
+			keyword.addKeyword(new Keyword(text3, weight3, buttonString));
+			if (input.isEmpty()) {
+				text = text3;
+			}
+		}
+
+		keywords = keyword.keywords;
+		try {
+			new HtmlMatcher(buttonString, text);
+		} catch (IOException e2) {
+			e2.printStackTrace();
+		}
+		try {
+			news = new WebTree(keywords);
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+
+		String[] related = HtmlMatcher.relatedKeyword;
+		request.setAttribute("related", related);
+
+		String[][] result = news.sort();	
+		request.setAttribute("result", result);
+		
 		request.getRequestDispatcher("googleitem.jsp")
 		 .forward(request, response); 
 		
